@@ -4,7 +4,7 @@ A Ev Card for my [Ems Home Integration](https://github.com/thetechnikfreak/emsho
 1. Make sure you have [HACS](https://hacs.xyz/) installed
 2. Go to HACS > Integrations
 3. Click the "..." menu and select "Custom repositories"
-4. Add the URL of this repository and select "Integration" as the category
+4. Add the URL of this repository and select "Dashboard" as the category
 5. Click "ADD"
 6. Search for "Emshome EV Card"
 7. Click "Install"
