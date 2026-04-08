@@ -1,5 +1,5 @@
 # EV Card for my Ems Home Intigration
-A Ev Card for my [ Ems Home Intigration ]([https://hacs.xyz/](https://github.com/thetechnikfreak/emshomehacs]) for the Abl Wallbox eMH1 
+A Ev Card for my [ Ems Home Intigration ]([https://github.com/thetechnikfreak/emshomehacs]) for the Abl Wallbox eMH1 
 ## Installation
 1. Make sure you have [HACS](https://hacs.xyz/) installed
 2. Go to HACS > Integrations
