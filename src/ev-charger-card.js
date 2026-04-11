@@ -6,12 +6,11 @@ const DEFAULT_IMAGE =
   "https://www.ablmobility.de/global/bilder/introabschnitt/produkte/basic-mobil/13_licht-1024.png";
 const MODES = ["lock", "grid", "pv", "hybrid"];
 
-/* Mode metadata: icon (Material Symbols codepoints as SVG paths) + MD3 tonal role */
-const MODE_META = {
-  lock:   { icon: "M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2z" },
-  grid:   { icon: "M20 3H4v10c0 2.21 1.79 4 4 4h6c2.21 0 4-1.79 4-4v-3h2c1.11 0 2-.89 2-2V5c0-1.11-.89-2-2-2zm0 5h-2V5h2v3zM4 19h16v2H4z" },
-  pv:     { icon: "M6.76 4.84l-1.8-1.79-1.41 1.41 1.79 1.79 1.42-1.41zM4 10.5H1v2h3v-2zm9-9.95h-2V3.5h2V.55zm7.45 3.91l-1.41-1.41-1.79 1.79 1.41 1.41 1.79-1.79zm-3.21 13.7l1.79 1.8 1.41-1.41-1.8-1.79-1.4 1.4zM20 10.5v2h3v-2h-3zm-8-5c-3.31 0-6 2.69-6 6s2.69 6 6 6 6-2.69 6-6-2.69-6-6-6zm-1 16.95h2V19.5h-2v2.95zm-7.45-3.91l1.41 1.41 1.79-1.8-1.41-1.41-1.79 1.8z" },
-  hybrid: { icon: "M7 2v11h3v9l7-12h-4l4-8z" },
+const MODE_ICONS = {
+  lock:   "M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2z",
+  grid:   "M20 3H4v10c0 2.21 1.79 4 4 4h6c2.21 0 4-1.79 4-4v-3h2c1.11 0 2-.89 2-2V5c0-1.11-.89-2-2-2zm0 5h-2V5h2v3zM4 19h16v2H4z",
+  pv:     "M6.76 4.84l-1.8-1.79-1.41 1.41 1.79 1.79 1.42-1.41zM4 10.5H1v2h3v-2zm9-9.95h-2V3.5h2V.55zm7.45 3.91l-1.41-1.41-1.79 1.79 1.41 1.41 1.79-1.79zm-3.21 13.7l1.79 1.8 1.41-1.41-1.8-1.79-1.4 1.4zM20 10.5v2h3v-2h-3zm-8-5c-3.31 0-6 2.69-6 6s2.69 6 6 6 6-2.69 6-6-2.69-6-6-6zm-1 16.95h2V19.5h-2v2.95zm-7.45-3.91l1.41 1.41 1.79-1.8-1.41-1.41-1.79 1.8z",
+  hybrid: "M7 2v11h3v9l7-12h-4l4-8z",
 };
 
 class EvChargerCard extends LitElement {
@@ -88,9 +87,8 @@ class EvChargerCard extends LitElement {
     }
   }
 
-  _modeIcon(mode) {
-    const d = MODE_META[mode]?.icon || "";
-    return html`<svg class="mode-icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="${d}"/></svg>`;
+  _icon(mode) {
+    return html`<svg viewBox="0 0 24 24" aria-hidden="true"><path d="${MODE_ICONS[mode] || ""}"/></svg>`;
   }
 
   _renderModeButton(mode, currentMode) {
@@ -101,9 +99,8 @@ class EvChargerCard extends LitElement {
         @click=${() => this._setChargingMode(mode)}
         aria-pressed=${active ? "true" : "false"}
       >
-        ${this._modeIcon(mode)}
+        ${this._icon(mode)}
         <span>${t(this._lang(), `modes.${mode}`)}</span>
-        ${active ? html`<span class="mode-indicator"></span>` : nothing}
       </button>
     `;
   }
@@ -114,11 +111,9 @@ class EvChargerCard extends LitElement {
     if (!this._hasRequiredConfig()) {
       return html`
         <ha-card>
-          <div class="md-shell">
-            <div class="md-header">
-              <h2>${this.config.title || this._text("card.title")}</h2>
-              <p class="md-subtitle">Please configure charging_mode_entity, power_entity, and pv_quota_entity.</p>
-            </div>
+          <div class="shell">
+            <h2>${this.config.title || this._text("card.title")}</h2>
+            <p class="hint">Please configure charging_mode_entity, power_entity, and pv_quota_entity.</p>
           </div>
         </ha-card>
       `;
@@ -131,81 +126,57 @@ class EvChargerCard extends LitElement {
     const remaining   = this.config.remaining_entity ? this._numberState(this.config.remaining_entity, 0) : 0;
     const title       = this.config.title || this._text("card.title");
 
-    const pvPct = sliderValue;
-    const gridPct = 100 - sliderValue;
-
     return html`
       <ha-card>
-        <div class="md-shell">
+        <div class="shell">
 
-          <!-- ── Header ── -->
-          <div class="md-header">
-            <div class="md-header-text">
+          <!-- Header -->
+          <div class="header">
+            <div>
               <h2>${title}</h2>
-              <p class="md-subtitle">
-                <span class="mode-chip mode-chip--${currentMode}">
-                  ${this._modeIcon(currentMode)}
-                  ${t(this._lang(), `modes.${currentMode}`)}
-                </span>
-              </p>
+              <p class="subhead">${this._text("card.mode")}: <strong>${t(this._lang(), `modes.${currentMode}`)}</strong></p>
             </div>
-            <div class="live-badge">
-              <span class="live-dot"></span>
-              LIVE
-            </div>
+            <img src=${this.config.image_url || DEFAULT_IMAGE} alt="EV charger" loading="lazy" />
           </div>
 
-          <!-- ── Hero ── -->
-          <div class="md-hero">
-            <div class="md-image-wrap">
-              <img src=${this.config.image_url || DEFAULT_IMAGE} alt="EV charger" loading="lazy" />
+          <!-- Stats -->
+          <div class="stats">
+            <div class="stat primary">
+              <span class="stat-label">${this._text("card.power")}</span>
+              <span class="stat-value">${this._formatNumber(power)} <em>${this._text("card.watts")}</em></span>
             </div>
-            <div class="md-stats">
-              <div class="md-stat md-stat--primary">
-                <span class="md-stat-label">${this._text("card.power")}</span>
-                <span class="md-stat-value">${this._formatNumber(power)}<em>${this._text("card.watts")}</em></span>
+            ${speed > 0 ? html`
+              <div class="stat">
+                <span class="stat-label">${this._text("card.speed")}</span>
+                <span class="stat-value">${this._formatNumber(speed, 1)} <em>${this._text("card.kmh")}</em></span>
               </div>
-              ${speed > 0 ? html`
-                <div class="md-stat">
-                  <span class="md-stat-label">${this._text("card.speed")}</span>
-                  <span class="md-stat-value">${this._formatNumber(speed, 1)}<em>${this._text("card.kmh")}</em></span>
-                </div>
-              ` : nothing}
-              ${remaining > 0 ? html`
-                <div class="md-stat">
-                  <span class="md-stat-label">${this._text("card.remaining")}</span>
-                  <span class="md-stat-value">${this._formatNumber(remaining)}<em>${this._text("card.minutes")}</em></span>
-                </div>
-              ` : nothing}
-            </div>
+            ` : nothing}
+            ${remaining > 0 ? html`
+              <div class="stat">
+                <span class="stat-label">${this._text("card.remaining")}</span>
+                <span class="stat-value">${this._formatNumber(remaining)} <em>${this._text("card.minutes")}</em></span>
+              </div>
+            ` : nothing}
           </div>
 
-          <!-- ── Mode grid ── -->
-          <div class="md-divider"></div>
-          <div class="md-section-label">${this._text("card.mode")}</div>
-          <div class="md-mode-grid">
+          <!-- Mode buttons -->
+          <div class="mode-grid">
             ${MODES.map((m) => this._renderModeButton(m, currentMode))}
           </div>
 
-          <!-- ── Hybrid slider ── -->
-          <div class="md-slider-card ${currentMode === "hybrid" ? "" : "md-slider-card--disabled"}">
-            <div class="md-slider-header">
-              <span class="md-section-label" style="margin:0">${this._text("card.hybridMix")}</span>
-              ${currentMode === "hybrid" ? html`
-                <span class="md-slider-readout">
-                  <span class="pv-val">${pvPct}%</span>&thinsp;PV &nbsp;·&nbsp; <span class="grid-val">${gridPct}%</span>&thinsp;Grid
-                </span>
-              ` : nothing}
+          <!-- Hybrid slider -->
+          <div class="slider-wrap ${currentMode === "hybrid" ? "" : "disabled"}">
+            <div class="slider-header">
+              <span class="slider-label">${this._text("card.hybridMix")}</span>
+              <span class="slider-value">${sliderValue}% PV</span>
             </div>
             <input
-              id="mix-slider"
-              type="range"
-              min="0" max="100" step="1"
+              type="range" min="0" max="100" step="1"
               .value=${String(sliderValue)}
               ?disabled=${currentMode !== "hybrid"}
               @change=${this._updateSliderValue}
             />
-            <div class="md-slider-labels">
+            <div class="slider-ticks">
               <span>${this._text("card.pvFull")}</span>
               <span>${this._text("card.balanced")}</span>
               <span>${this._text("card.gridFull")}</span>
@@ -219,224 +190,121 @@ class EvChargerCard extends LitElement {
 
   static get styles() {
     return css`
-      /* ── MD3 token fallbacks ── */
       :host {
-        /* Surface / background */
-        --ev-surface:         var(--md-sys-color-surface,            #faf9fd);
-        --ev-surface-variant: var(--md-sys-color-surface-variant,    #e4e1ec);
-        --ev-surface-container: var(--md-sys-color-surface-container, #eeedf1);
-        --ev-on-surface:      var(--md-sys-color-on-surface,         #1c1b1f);
-        --ev-on-surface-var:  var(--md-sys-color-on-surface-variant, #49454f);
-        --ev-outline:         var(--md-sys-color-outline,            #7a757f);
-        --ev-outline-var:     var(--md-sys-color-outline-variant,    #cac4d0);
-
-        /* Primary tonal */
-        --ev-primary:         var(--md-sys-color-primary,            #6750a4);
-        --ev-on-primary:      var(--md-sys-color-on-primary,         #ffffff);
-        --ev-primary-container: var(--md-sys-color-primary-container, #eaddff);
-        --ev-on-primary-cont: var(--md-sys-color-on-primary-container, #21005d);
-
-        /* Secondary tonal (green accent — custom) */
-        --ev-secondary:         #1b6e4b;
-        --ev-on-secondary:      #ffffff;
-        --ev-secondary-container: #b1f0cc;
-        --ev-on-secondary-cont: #002114;
-
-        /* Error */
-        --ev-error:           var(--md-sys-color-error,              #b3261e);
-
-        /* Elevation shadows (MD3 levels) */
-        --ev-elev1: 0 1px 2px rgba(0,0,0,.12), 0 1px 3px 1px rgba(0,0,0,.08);
-        --ev-elev2: 0 1px 2px rgba(0,0,0,.12), 0 2px 6px 2px rgba(0,0,0,.10);
-        --ev-elev3: 0 4px 8px 3px rgba(0,0,0,.10), 0 1px 3px rgba(0,0,0,.14);
-
-        /* Typography */
-        --ev-font: var(--md-ref-typeface-brand, 'Google Sans', Roboto, sans-serif);
-        --ev-font-plain: var(--md-ref-typeface-plain, Roboto, sans-serif);
-
         display: block;
+        --c-bg:         var(--card-background-color,                   #fff);
+        --c-on-bg:      var(--primary-text-color,                      #1c1b1f);
+        --c-secondary:  var(--secondary-text-color,                    #49454f);
+        --c-divider:    var(--divider-color,                           #e0e0e0);
+        --c-primary:    var(--primary-color,                           #6750a4);
+        --c-primary-c:  var(--md-sys-color-primary-container,          #eaddff);
+        --c-primary-on: var(--md-sys-color-on-primary-container,       #21005d);
+        --c-surface-c:  var(--md-sys-color-surface-container,
+                           color-mix(in srgb, var(--c-on-bg) 6%, var(--c-bg)));
+        --c-active-bg:  var(--md-sys-color-secondary-container,
+                           color-mix(in srgb, var(--c-primary) 15%, var(--c-bg)));
+        --c-active-on:  var(--md-sys-color-on-secondary-container,     var(--c-primary));
+        --c-accent:     var(--md-sys-color-secondary,                  #4caf50);
       }
 
       ha-card {
-        background: var(--ev-surface);
+        background: var(--c-bg);
         border-radius: 16px;
-        box-shadow: var(--ev-elev1);
         overflow: hidden;
-        font-family: var(--ev-font-plain);
-        color: var(--ev-on-surface);
+        box-shadow: 0 1px 3px rgba(0,0,0,.12), 0 2px 6px rgba(0,0,0,.08);
       }
 
-      .md-shell {
+      .shell {
         padding: 16px;
-        animation: md-enter 260ms cubic-bezier(.2,.0,0,1) both;
+        color: var(--c-on-bg);
+        font-family: var(--paper-font-body1_-_font-family, Roboto, sans-serif);
       }
 
       /* ── Header ── */
-      .md-header {
+      .header {
         display: flex;
         justify-content: space-between;
-        align-items: flex-start;
-        margin-bottom: 16px;
-        gap: 8px;
+        align-items: center;
+        gap: 12px;
+        margin-bottom: 14px;
       }
-
-      .md-header-text { flex: 1 1 auto; }
 
       h2 {
         margin: 0;
-        font-family: var(--ev-font);
-        font-size: 1.375rem; /* MD3 title-large */
-        font-weight: 400;
-        letter-spacing: 0;
-        line-height: 1.75rem;
-        color: var(--ev-on-surface);
-      }
-
-      .md-subtitle {
-        margin: 4px 0 0;
-        font-size: 0.875rem;
-        color: var(--ev-on-surface-var);
-      }
-
-      /* mode chip in header */
-      .mode-chip {
-        display: inline-flex;
-        align-items: center;
-        gap: 4px;
-        padding: 2px 10px 2px 6px;
-        border-radius: 99px;
-        font-size: 0.8125rem;
+        font-size: 1.2rem;
         font-weight: 500;
-        background: var(--ev-surface-container);
-        color: var(--ev-on-surface-var);
-        line-height: 1.6;
+        color: var(--c-on-bg);
       }
 
-      .mode-chip--lock   { background: #fde7e7; color: #8c1d18; }
-      .mode-chip--grid   { background: #e3f2fd; color: #0d47a1; }
-      .mode-chip--pv     { background: #e8f5e9; color: #1b5e20; }
-      .mode-chip--hybrid { background: var(--ev-primary-container); color: var(--ev-on-primary-cont); }
-
-      .mode-chip .mode-icon { width: 15px; height: 15px; fill: currentColor; }
-
-      /* LIVE badge */
-      .live-badge {
-        display: flex;
-        align-items: center;
-        gap: 5px;
-        padding: 4px 10px;
-        border-radius: 99px;
-        background: var(--ev-secondary-container);
-        color: var(--ev-on-secondary-cont);
-        font-size: 0.6875rem;
-        font-weight: 700;
-        letter-spacing: 0.08em;
-        flex-shrink: 0;
-        align-self: center;
+      .subhead {
+        margin: 3px 0 0;
+        font-size: 0.8125rem;
+        color: var(--c-secondary);
       }
 
-      .live-dot {
-        width: 6px;
-        height: 6px;
-        border-radius: 50%;
-        background: var(--ev-secondary);
-        animation: pulse 1.8s ease-in-out infinite;
-      }
-
-      /* ── Hero ── */
-      .md-hero {
-        display: grid;
-        grid-template-columns: 1.1fr 1fr;
-        gap: 12px;
-        margin-bottom: 16px;
-        align-items: stretch;
-      }
-
-      .md-image-wrap {
-        border-radius: 12px;
-        overflow: hidden;
-        background: var(--ev-surface-container);
+      .subhead strong {
+        color: var(--c-primary);
+        font-weight: 500;
       }
 
       img {
-        width: 100%;
-        height: 152px;
+        width: 68px;
+        height: 68px;
         object-fit: cover;
-        display: block;
+        border-radius: 10px;
+        flex-shrink: 0;
+        background: var(--c-surface-c);
       }
 
-      .md-stats {
+      /* ── Stats ── */
+      .stats {
         display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(90px, 1fr));
         gap: 8px;
-        align-content: start;
+        margin-bottom: 14px;
       }
 
-      .md-stat {
-        background: var(--ev-surface-container);
-        border-radius: 12px;
+      .stat {
+        background: var(--c-surface-c);
+        border-radius: 10px;
         padding: 10px 12px;
         display: flex;
         flex-direction: column;
         gap: 2px;
-        transition: box-shadow 200ms ease;
       }
 
-      .md-stat--primary {
-        background: var(--ev-primary-container);
-        color: var(--ev-on-primary-cont);
-        box-shadow: var(--ev-elev1);
+      .stat.primary {
+        background: var(--c-primary-c);
+        color: var(--c-primary-on);
       }
 
-      .md-stat-label {
+      .stat-label {
         font-size: 0.6875rem;
         font-weight: 500;
-        letter-spacing: 0.07em;
+        letter-spacing: 0.06em;
         text-transform: uppercase;
-        opacity: 0.72;
+        opacity: 0.7;
       }
 
-      .md-stat-value {
-        font-family: var(--ev-font);
-        font-size: 1.25rem;
+      .stat-value {
+        font-size: 1.2rem;
         font-weight: 400;
-        line-height: 1.3;
-        color: var(--ev-on-surface);
+        line-height: 1.2;
       }
 
-      .md-stat--primary .md-stat-value { color: var(--ev-on-primary-cont); }
-
-      .md-stat-value em {
+      .stat-value em {
         font-style: normal;
         font-size: 0.75rem;
-        font-weight: 500;
-        margin-left: 2px;
-        opacity: 0.7;
-        vertical-align: baseline;
-      }
-
-      /* ── Divider + section label ── */
-      .md-divider {
-        height: 1px;
-        background: var(--ev-outline-var);
-        margin: 4px 0 12px;
-      }
-
-      .md-section-label {
-        font-size: 0.75rem;
-        font-weight: 500;
-        letter-spacing: 0.08em;
-        text-transform: uppercase;
-        color: var(--ev-primary);
-        margin-bottom: 8px;
-        display: block;
+        opacity: 0.65;
+        margin-left: 1px;
       }
 
       /* ── Mode grid ── */
-      .md-mode-grid {
+      .mode-grid {
         display: grid;
         grid-template-columns: repeat(2, 1fr);
         gap: 8px;
-        margin-bottom: 14px;
+        margin-bottom: 12px;
       }
 
       .mode-btn {
@@ -445,166 +313,125 @@ class EvChargerCard extends LitElement {
         display: flex;
         align-items: center;
         gap: 8px;
-        border: 1px solid var(--ev-outline-var);
-        background: var(--ev-surface);
-        color: var(--ev-on-surface-var);
-        border-radius: 12px;
         padding: 10px 12px;
-        font-family: var(--ev-font-plain);
+        border: 1px solid var(--c-divider);
+        border-radius: 10px;
+        background: transparent;
+        color: var(--c-secondary);
+        font-family: inherit;
         font-size: 0.8125rem;
         font-weight: 500;
-        letter-spacing: 0.01em;
         cursor: pointer;
-        transition:
-          background 160ms ease,
-          border-color 160ms ease,
-          box-shadow 160ms ease,
-          color 160ms ease;
+        transition: background 150ms, border-color 150ms, color 150ms, box-shadow 150ms;
         text-align: left;
       }
 
-      .mode-btn::before {
-        content: "";
-        position: absolute;
-        inset: 0;
-        background: currentColor;
-        opacity: 0;
-        transition: opacity 120ms ease;
-        border-radius: inherit;
-        pointer-events: none;
-      }
-
-      .mode-btn:hover::before  { opacity: 0.06; }
-      .mode-btn:active::before { opacity: 0.12; }
-
-      .mode-btn:hover {
-        border-color: var(--ev-outline);
-        box-shadow: var(--ev-elev1);
-      }
-
-      .mode-btn.active {
-        background: var(--ev-secondary-container);
-        border-color: transparent;
-        color: var(--ev-on-secondary-cont);
-        box-shadow: var(--ev-elev2);
-      }
-
-      .mode-icon {
+      .mode-btn svg {
         width: 18px;
         height: 18px;
         fill: currentColor;
         flex-shrink: 0;
       }
 
-      .mode-btn span { flex: 1 1 auto; }
-
-      .mode-indicator {
-        flex: 0 0 auto !important;
-        width: 6px;
-        height: 6px;
-        border-radius: 50%;
-        background: var(--ev-secondary);
+      .mode-btn::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: currentColor;
+        opacity: 0;
+        transition: opacity 100ms;
+        pointer-events: none;
       }
 
-      /* ── Hybrid slider card ── */
-      .md-slider-card {
-        background: var(--ev-surface-container);
-        border-radius: 12px;
-        padding: 12px 14px;
-        transition: opacity 200ms ease;
+      .mode-btn:hover::after  { opacity: .06; }
+      .mode-btn:active::after { opacity: .12; }
+
+      .mode-btn.active {
+        background: var(--c-active-bg);
+        border-color: transparent;
+        color: var(--c-active-on);
+        box-shadow: 0 1px 3px rgba(0,0,0,.10);
       }
 
-      .md-slider-card--disabled { opacity: 0.45; pointer-events: none; }
+      /* ── Slider ── */
+      .slider-wrap {
+        background: var(--c-surface-c);
+        border-radius: 10px;
+        padding: 12px;
+        transition: opacity 180ms;
+      }
 
-      .md-slider-header {
+      .slider-wrap.disabled {
+        opacity: 0.4;
+        pointer-events: none;
+      }
+
+      .slider-header {
         display: flex;
         justify-content: space-between;
         align-items: center;
         margin-bottom: 8px;
       }
 
-      .md-slider-readout {
-        font-size: 0.8rem;
+      .slider-label {
+        font-size: 0.8125rem;
         font-weight: 500;
-        color: var(--ev-on-surface-var);
+        color: var(--c-on-bg);
       }
 
-      .pv-val   { color: #1b6e4b; font-weight: 700; }
-      .grid-val { color: #0d47a1; font-weight: 700; }
+      .slider-value {
+        font-size: 0.8125rem;
+        font-weight: 600;
+        color: var(--c-accent);
+      }
 
-      /* MD3-flavoured range input */
       input[type="range"] {
         -webkit-appearance: none;
         appearance: none;
         width: 100%;
         height: 4px;
         border-radius: 2px;
-        background: linear-gradient(
-          to right,
-          var(--ev-secondary) 0%,
-          var(--ev-secondary) calc(var(--slider-pct, 50) * 1%),
-          var(--ev-outline-var) calc(var(--slider-pct, 50) * 1%),
-          var(--ev-outline-var) 100%
-        );
+        background: var(--c-divider);
+        accent-color: var(--c-accent);
         outline: none;
         cursor: pointer;
-        accent-color: var(--ev-secondary);
       }
 
       input[type="range"]::-webkit-slider-thumb {
         -webkit-appearance: none;
-        width: 20px;
-        height: 20px;
+        width: 18px;
+        height: 18px;
         border-radius: 50%;
-        background: var(--ev-secondary);
-        box-shadow: 0 0 0 0 rgba(27,110,75,.3);
-        transition: box-shadow 160ms ease, transform 120ms ease;
+        background: var(--c-accent);
         cursor: pointer;
+        transition: box-shadow 150ms, transform 120ms;
       }
 
       input[type="range"]:not(:disabled):hover::-webkit-slider-thumb {
-        box-shadow: 0 0 0 6px rgba(27,110,75,.14);
+        box-shadow: 0 0 0 6px color-mix(in srgb, var(--c-accent) 18%, transparent);
         transform: scale(1.1);
       }
 
-      input[type="range"]:not(:disabled):active::-webkit-slider-thumb {
-        box-shadow: 0 0 0 10px rgba(27,110,75,.22);
-        transform: scale(1.15);
-      }
-
       input[type="range"]::-moz-range-thumb {
-        width: 20px;
-        height: 20px;
+        width: 18px;
+        height: 18px;
         border: none;
         border-radius: 50%;
-        background: var(--ev-secondary);
+        background: var(--c-accent);
         cursor: pointer;
       }
 
-      .md-slider-labels {
+      .slider-ticks {
         display: flex;
         justify-content: space-between;
-        margin-top: 6px;
+        margin-top: 5px;
         font-size: 0.6875rem;
-        color: var(--ev-on-surface-var);
-        opacity: 0.8;
-      }
-
-      /* ── Animations ── */
-      @keyframes md-enter {
-        from { opacity: 0; transform: translateY(6px); }
-        to   { opacity: 1; transform: translateY(0); }
-      }
-
-      @keyframes pulse {
-        0%, 100% { opacity: 1; }
-        50%       { opacity: .35; }
+        color: var(--c-secondary);
       }
 
       /* ── Responsive ── */
-      @media (max-width: 480px) {
-        .md-hero { grid-template-columns: 1fr; }
-        img { height: 130px; }
+      @media (max-width: 400px) {
+        img { width: 56px; height: 56px; }
       }
     `;
   }
