@@ -2,8 +2,6 @@ import { LitElement, html, css, nothing } from "lit";
 import "./ev-charger-editor.js";
 import { getLanguage, t } from "./translations.js";
 
-const DEFAULT_IMAGE =
-  "https://www.ablmobility.de/global/bilder/introabschnitt/produkte/basic-mobil/13_licht-1024.png";
 const MODES = ["lock", "grid", "pv", "hybrid"];
 
 const MODE_ICONS = {
@@ -22,7 +20,7 @@ class EvChargerCard extends LitElement {
     return {
       title: "EV Charger",
       language: "auto",
-      image_url: DEFAULT_IMAGE,
+      image_url: "",
       charging_mode_entity: "",
       power_entity: "",
       pv_quota_entity: "",
@@ -39,7 +37,7 @@ class EvChargerCard extends LitElement {
     this.config = {
       ...EvChargerCard.getStubConfig(),
       ...config,
-      image_url: config.image_url || DEFAULT_IMAGE,
+      image_url: config.image_url || "",
     };
   }
 
@@ -131,9 +129,11 @@ class EvChargerCard extends LitElement {
         <div class="shell">
 
           <!-- Image banner -->
+          ${this.config.image_url ? html`
           <div class="img-wrap">
-            <img src=${this.config.image_url || DEFAULT_IMAGE} alt="EV charger" loading="lazy" />
+            <img src=${this.config.image_url} alt="EV charger" loading="lazy" />
           </div>
+          ` : nothing}
 
           <!-- Header -->
           <div class="header">

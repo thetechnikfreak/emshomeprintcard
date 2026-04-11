@@ -101,7 +101,7 @@
       .lang-select:focus {
         border-color: var(--primary-color);
       }
-    `}});const pt="https://www.ablmobility.de/global/bilder/introabschnitt/produkte/basic-mobil/13_licht-1024.png",ut=["lock","grid","pv","hybrid"],gt={lock:"M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2z",grid:"M20 3H4v10c0 2.21 1.79 4 4 4h6c2.21 0 4-1.79 4-4v-3h2c1.11 0 2-.89 2-2V5c0-1.11-.89-2-2-2zm0 5h-2V5h2v3zM4 19h16v2H4z",pv:"M6.76 4.84l-1.8-1.79-1.41 1.41 1.79 1.79 1.42-1.41zM4 10.5H1v2h3v-2zm9-9.95h-2V3.5h2V.55zm7.45 3.91l-1.41-1.41-1.79 1.79 1.41 1.41 1.79-1.79zm-3.21 13.7l1.79 1.8 1.41-1.41-1.8-1.79-1.4 1.4zM20 10.5v2h3v-2h-3zm-8-5c-3.31 0-6 2.69-6 6s2.69 6 6 6 6-2.69 6-6-2.69-6-6-6zm-1 16.95h2V19.5h-2v2.95zm-7.45-3.91l1.41 1.41 1.79-1.8-1.41-1.41-1.79 1.8z",hybrid:"M7 2v11h3v9l7-12h-4l4-8z"};class mt extends ot{static get properties(){return{hass:{},config:{}}}static getStubConfig(){return{title:"EV Charger",language:"auto",image_url:pt,charging_mode_entity:"",power_entity:"",pv_quota_entity:"",speed_entity:"",remaining_entity:""}}static getConfigElement(){return document.createElement("ev-charger-editor")}setConfig(t){this.config={...mt.getStubConfig(),...t,image_url:t.image_url||pt}}getCardSize(){return 4}_lang(){return lt(this.hass,this.config?.language)}_text(t){return dt(this._lang(),t)}_state(t,e=""){return this.hass?.states?.[t]?.state??e}_numberState(t,e=0){const i=Number(this._state(t,e));return Number.isFinite(i)?i:e}_formatNumber(t,e=0){return new Intl.NumberFormat(this._lang(),{minimumFractionDigits:e,maximumFractionDigits:e}).format(t)}_hasRequiredConfig(){return Boolean(this.config?.charging_mode_entity&&this.config?.power_entity&&this.config?.pv_quota_entity)}async _setChargingMode(t){const e=this._numberState(this.config.pv_quota_entity,50);let i=0;"pv"===t?i=100:"hybrid"===t&&(i=e);try{await this.hass.callService("emshome","set_charging_mode",{mode:t,minpvpowerquota:i})}catch(t){console.error(this._text("card.serviceError"),t)}}async _updateSliderValue(t){const e=Number(t.target.value);try{await this.hass.callService("emshome","prozentage",{prozentage:e})}catch(t){console.error(this._text("card.serviceError"),t)}}_icon(t){return j`<svg viewBox="0 0 24 24" aria-hidden="true"><path d="${gt[t]||""}"/></svg>`}_renderModeButton(t,e){const i=e===t;return j`
+    `}});const pt=["lock","grid","pv","hybrid"],ut={lock:"M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2z",grid:"M20 3H4v10c0 2.21 1.79 4 4 4h6c2.21 0 4-1.79 4-4v-3h2c1.11 0 2-.89 2-2V5c0-1.11-.89-2-2-2zm0 5h-2V5h2v3zM4 19h16v2H4z",pv:"M6.76 4.84l-1.8-1.79-1.41 1.41 1.79 1.79 1.42-1.41zM4 10.5H1v2h3v-2zm9-9.95h-2V3.5h2V.55zm7.45 3.91l-1.41-1.41-1.79 1.79 1.41 1.41 1.79-1.79zm-3.21 13.7l1.79 1.8 1.41-1.41-1.8-1.79-1.4 1.4zM20 10.5v2h3v-2h-3zm-8-5c-3.31 0-6 2.69-6 6s2.69 6 6 6 6-2.69 6-6-2.69-6-6-6zm-1 16.95h2V19.5h-2v2.95zm-7.45-3.91l1.41 1.41 1.79-1.8-1.41-1.41-1.79 1.8z",hybrid:"M7 2v11h3v9l7-12h-4l4-8z"};class gt extends ot{static get properties(){return{hass:{},config:{}}}static getStubConfig(){return{title:"EV Charger",language:"auto",image_url:"",charging_mode_entity:"",power_entity:"",pv_quota_entity:"",speed_entity:"",remaining_entity:""}}static getConfigElement(){return document.createElement("ev-charger-editor")}setConfig(t){this.config={...gt.getStubConfig(),...t,image_url:t.image_url||""}}getCardSize(){return 4}_lang(){return lt(this.hass,this.config?.language)}_text(t){return dt(this._lang(),t)}_state(t,e=""){return this.hass?.states?.[t]?.state??e}_numberState(t,e=0){const i=Number(this._state(t,e));return Number.isFinite(i)?i:e}_formatNumber(t,e=0){return new Intl.NumberFormat(this._lang(),{minimumFractionDigits:e,maximumFractionDigits:e}).format(t)}_hasRequiredConfig(){return Boolean(this.config?.charging_mode_entity&&this.config?.power_entity&&this.config?.pv_quota_entity)}async _setChargingMode(t){const e=this._numberState(this.config.pv_quota_entity,50);let i=0;"pv"===t?i=100:"hybrid"===t&&(i=e);try{await this.hass.callService("emshome","set_charging_mode",{mode:t,minpvpowerquota:i})}catch(t){console.error(this._text("card.serviceError"),t)}}async _updateSliderValue(t){const e=Number(t.target.value);try{await this.hass.callService("emshome","prozentage",{prozentage:e})}catch(t){console.error(this._text("card.serviceError"),t)}}_icon(t){return j`<svg viewBox="0 0 24 24" aria-hidden="true"><path d="${ut[t]||""}"/></svg>`}_renderModeButton(t,e){const i=e===t;return j`
       <button
         class="mode-btn ${i?"active":""}"
         @click=${()=>this._setChargingMode(t)}
@@ -122,9 +122,11 @@
         <div class="shell">
 
           <!-- Image banner -->
+          ${this.config.image_url?j`
           <div class="img-wrap">
-            <img src=${this.config.image_url||pt} alt="EV charger" loading="lazy" />
+            <img src=${this.config.image_url} alt="EV charger" loading="lazy" />
           </div>
+          `:q}
 
           <!-- Header -->
           <div class="header">
@@ -154,7 +156,7 @@
 
           <!-- Mode buttons -->
           <div class="mode-grid">
-            ${ut.map(e=>this._renderModeButton(e,t))}
+            ${pt.map(e=>this._renderModeButton(e,t))}
           </div>
 
           <!-- Hybrid slider -->
@@ -421,4 +423,4 @@
       @media (max-width: 400px) {
         img { height: 170px; }
       }
-    `}}customElements.define("ev-charger-card",mt),window.customCards=window.customCards||[],window.customCards.push({type:"ev-charger-card",name:"EV Charger Card",description:"Premium EV charger card for the EMS Home integration"})}();
+    `}}customElements.define("ev-charger-card",gt),window.customCards=window.customCards||[],window.customCards.push({type:"ev-charger-card",name:"EV Charger Card",description:"Premium EV charger card for the EMS Home integration"})}();
