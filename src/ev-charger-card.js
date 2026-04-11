@@ -231,7 +231,7 @@ class EvChargerCard extends LitElement {
         width: 100%;
         height: 220px;
         object-fit: cover;
-        object-position: center center;
+        object-position: center top;
         display: block;
       }
 
