@@ -2,10 +2,12 @@ import { LitElement, html, css } from "lit";
 import { getLanguage, t } from "./translations.js";
 
 class EvChargerEditor extends LitElement {
-  static properties = {
-    hass: {},
-    _config: { state: true },
-  };
+  static get properties() {
+    return {
+      hass: {},
+      _config: { state: true },
+    };
+  }
 
   setConfig(config) {
     this._config = {
@@ -130,7 +132,8 @@ class EvChargerEditor extends LitElement {
     `;
   }
 
-  static styles = css`
+  static get styles() {
+    return css`
     .editor {
       display: grid;
       gap: 16px;
@@ -157,7 +160,8 @@ class EvChargerEditor extends LitElement {
     ha-entity-picker {
       width: 100%;
     }
-  `;
+    `;
+  }
 }
 
 customElements.define("ev-charger-editor", EvChargerEditor);

@@ -6,10 +6,12 @@ const DEFAULT_IMAGE = "https://www.ablmobility.de/global/bilder/introabschnitt/p
 const MODES = ["lock", "grid", "pv", "hybrid"];
 
 class EvChargerCard extends LitElement {
-  static properties = {
-    hass: {},
-    config: {},
-  };
+  static get properties() {
+    return {
+      hass: {},
+      config: {},
+    };
+  }
 
   static getStubConfig() {
     return {
@@ -190,7 +192,8 @@ class EvChargerCard extends LitElement {
     `;
   }
 
-  static styles = css`
+  static get styles() {
+    return css`
     :host {
       --ev-accent: #0b8f6a;
       --ev-accent-soft: #a7f1d8;
@@ -389,7 +392,8 @@ class EvChargerCard extends LitElement {
         height: 128px;
       }
     }
-  `;
+    `;
+  }
 }
 
 customElements.define("ev-charger-card", EvChargerCard);
