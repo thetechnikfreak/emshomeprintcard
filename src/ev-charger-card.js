@@ -229,11 +229,10 @@ class EvChargerCard extends LitElement {
 
       img {
         width: 100%;
-        height: 180px;
-        object-fit: contain;
+        height: 220px;
+        object-fit: cover;
         object-position: center center;
         display: block;
-        background: transparent;
       }
 
       .header {
@@ -433,7 +432,7 @@ class EvChargerCard extends LitElement {
 
       /* ── Responsive ── */
       @media (max-width: 400px) {
-        img { height: 150px; }
+        img { height: 170px; }
       }
     `;
   }

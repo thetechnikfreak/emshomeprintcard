@@ -216,11 +216,10 @@
 
       img {
         width: 100%;
-        height: 180px;
-        object-fit: contain;
+        height: 220px;
+        object-fit: cover;
         object-position: center center;
         display: block;
-        background: transparent;
       }
 
       .header {
@@ -420,6 +419,6 @@
 
       /* ── Responsive ── */
       @media (max-width: 400px) {
-        img { height: 150px; }
+        img { height: 170px; }
       }
     `}}customElements.define("ev-charger-card",mt),window.customCards=window.customCards||[],window.customCards.push({type:"ev-charger-card",name:"EV Charger Card",description:"Premium EV charger card for the EMS Home integration"})}();
