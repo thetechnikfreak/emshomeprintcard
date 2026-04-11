@@ -70,14 +70,12 @@ class EvChargerEditor extends LitElement {
 
   _renderEntityPicker(key, label) {
     return html`
-      <ha-entity-picker
-        .hass=${this.hass}
+      <ha-textfield
+        .label=${label}
         .value=${this._config?.[key] || ""}
         .configValue=${key}
-        .label=${label}
-        allow-custom-entity
-        @value-changed=${this._onInputChanged}
-      ></ha-entity-picker>
+        @change=${this._onInputChanged}
+      ></ha-textfield>
     `;
   }
 

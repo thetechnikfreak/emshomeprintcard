@@ -31,10 +31,6 @@ class EvChargerCard extends LitElement {
   }
 
   setConfig(config) {
-    if (!config?.charging_mode_entity || !config?.power_entity || !config?.pv_quota_entity) {
-      throw new Error("Required: charging_mode_entity, power_entity, pv_quota_entity");
-    }
-
     this.config = {
       ...EvChargerCard.getStubConfig(),
       ...config,
@@ -68,6 +64,14 @@ class EvChargerCard extends LitElement {
       minimumFractionDigits: decimals,
       maximumFractionDigits: decimals,
     }).format(value);
+  }
+
+  _hasRequiredConfig() {
+    return Boolean(
+      this.config?.charging_mode_entity &&
+        this.config?.power_entity &&
+        this.config?.pv_quota_entity
+    );
   }
 
   async _setChargingMode(mode) {
@@ -120,6 +124,21 @@ class EvChargerCard extends LitElement {
   render() {
     if (!this.hass || !this.config) {
       return nothing;
+    }
+
+    if (!this._hasRequiredConfig()) {
+      return html`
+        <ha-card>
+          <div class="shell">
+            <div class="header">
+              <div>
+                <h2>${this.config.title || this._text("card.title")}</h2>
+                <p>Please configure charging_mode_entity, power_entity, and pv_quota_entity.</p>
+              </div>
+            </div>
+          </div>
+        </ha-card>
+      `;
     }
 
     const currentMode = this._state(this.config.charging_mode_entity, "lock");
