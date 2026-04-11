@@ -130,13 +130,15 @@ class EvChargerCard extends LitElement {
       <ha-card>
         <div class="shell">
 
+          <!-- Image banner -->
+          <div class="img-wrap">
+            <img src=${this.config.image_url || DEFAULT_IMAGE} alt="EV charger" loading="lazy" />
+          </div>
+
           <!-- Header -->
           <div class="header">
-            <div>
-              <h2>${title}</h2>
-              <p class="subhead">${this._text("card.mode")}: <strong>${t(this._lang(), `modes.${currentMode}`)}</strong></p>
-            </div>
-            <img src=${this.config.image_url || DEFAULT_IMAGE} alt="EV charger" loading="lazy" />
+            <h2>${title}</h2>
+            <p class="subhead">${this._text("card.mode")}: <strong>${t(this._lang(), `modes.${currentMode}`)}</strong></p>
           </div>
 
           <!-- Stats -->
@@ -221,11 +223,18 @@ class EvChargerCard extends LitElement {
       }
 
       /* ── Header ── */
+      .img-wrap {
+        margin: -16px -16px 14px;
+      }
+
+      img {
+        width: 100%;
+        height: 160px;
+        object-fit: cover;
+        display: block;
+      }
+
       .header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        gap: 12px;
         margin-bottom: 14px;
       }
 
@@ -245,15 +254,6 @@ class EvChargerCard extends LitElement {
       .subhead strong {
         color: var(--c-primary);
         font-weight: 500;
-      }
-
-      img {
-        width: 68px;
-        height: 68px;
-        object-fit: cover;
-        border-radius: 10px;
-        flex-shrink: 0;
-        background: var(--c-surface-c);
       }
 
       /* ── Stats ── */
@@ -431,7 +431,7 @@ class EvChargerCard extends LitElement {
 
       /* ── Responsive ── */
       @media (max-width: 400px) {
-        img { width: 56px; height: 56px; }
+        img { height: 130px; }
       }
     `;
   }
