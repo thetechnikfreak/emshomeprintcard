@@ -1,0 +1,21 @@
+{
+  "name": "emshomeevcard",
+  "version": "1.1.0",
+  "description": "A premium EV Charger card for Home Assistant's EMS Home Integration (ABL eMH1)",
+  "main": "dist/emshomeevcard.js",
+  "scripts": {
+    "build": "rollup -c",
+    "dev": "rollup -c --watch"
+  },
+  "keywords": ["home-assistant", "lovelace", "ev-charger", "abl", "emshome"],
+  "author": "thetechnikfreak",
+  "license": "MIT",
+  "dependencies": {
+    "lit": "^3.1.0"
+  },
+  "devDependencies": {
+    "@rollup/plugin-node-resolve": "^15.2.0",
+    "@rollup/plugin-terser": "^0.4.0",
+    "rollup": "^4.9.0"
+  }
+}
