@@ -69,4 +69,4 @@ npm install
 npm run build
 ```
 
-Rollup outputs the production bundle to `dist/emshomeevcard.js`.
+Rollup outputs the production bundle to `emshomeevcard.js`.

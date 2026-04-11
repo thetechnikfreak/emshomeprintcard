@@ -2,5 +2,5 @@
     "name": "Emshome EV Card",
     "render_readme": true,
     "content_type": "plugin",
-    "filename": "dist/emshomeevcard.js"
+  "filename": "emshomeevcard.js"
   }
