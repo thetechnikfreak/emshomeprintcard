@@ -57,7 +57,7 @@ const TRANSLATIONS = {
     modes: {
       lock: "Nicht laden",
       grid: "Netz",
-      pv: "PV-Uberschuss",
+      pv: "PV-Überschuss",
       hybrid: "Hybrid",
     },
     editor: {
@@ -65,12 +65,12 @@ const TRANSLATIONS = {
       cardTitle: "Kartentitel",
       language: "Sprache",
       imageUrl: "Bild-URL",
-      chargingModeEntity: "Entity fur Lademodus",
-      powerEntity: "Entity fur Leistung",
-      pvQuotaEntity: "Entity fur PV-Anteil",
-      speedEntity: "Entity fur Geschwindigkeit (optional)",
-      remainingEntity: "Entity fur Restzeit (optional)",
-      entities: "Entitaten",
+      chargingModeEntity: "Entity für Lademodus",
+      powerEntity: "Entity für Leistung",
+      pvQuotaEntity: "Entity für PV-Anteil",
+      speedEntity: "Entity für Geschwindigkeit (optional)",
+      remainingEntity: "Entity für Restzeit (optional)",
+      entities: "Entitäten",
       appearance: "Darstellung",
       languageAuto: "Auto (Home Assistant Sprache)",
       languageEn: "Englisch",
@@ -87,7 +87,6 @@ export function getLanguage(hass, override) {
   if (override === "en" || override === "de") {
     return override;
   }
-
   const language = hass?.locale?.language || hass?.language || "en";
   return String(language).toLowerCase().startsWith("de") ? "de" : "en";
 }

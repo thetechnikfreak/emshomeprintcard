@@ -32,23 +32,12 @@ class EvChargerEditor extends LitElement {
   }
 
   _onInputChanged(event) {
-    if (!this._config) {
-      return;
-    }
-
+    if (!this._config) return;
     const target = event.target;
     const key = target.configValue;
     const value = event.detail?.value ?? target.value;
-
-    if (!key) {
-      return;
-    }
-
-    const nextConfig = {
-      ...this._config,
-      [key]: value,
-    };
-
+    if (!key) return;
+    const nextConfig = { ...this._config, [key]: value };
     this._config = nextConfig;
     this.dispatchEvent(
       new CustomEvent("config-changed", {
@@ -61,10 +50,7 @@ class EvChargerEditor extends LitElement {
 
   _onLanguageChanged(event) {
     this._onInputChanged({
-      target: {
-        configValue: "language",
-        value: event.target.value,
-      },
+      target: { configValue: "language", value: event.target.value },
     });
   }
 
@@ -80,14 +66,10 @@ class EvChargerEditor extends LitElement {
   }
 
   render() {
-    if (!this.hass || !this._config) {
-      return html``;
-    }
-
+    if (!this.hass || !this._config) return html``;
     return html`
       <div class="editor">
         <h3>${this._text("editor.title")}</h3>
-
         <section>
           <h4>${this._text("editor.entities")}</h4>
           ${this._renderEntityPicker("charging_mode_entity", this._text("editor.chargingModeEntity"))}
@@ -96,7 +78,6 @@ class EvChargerEditor extends LitElement {
           ${this._renderEntityPicker("speed_entity", this._text("editor.speedEntity"))}
           ${this._renderEntityPicker("remaining_entity", this._text("editor.remainingEntity"))}
         </section>
-
         <section>
           <h4>${this._text("editor.appearance")}</h4>
           <ha-textfield
@@ -105,19 +86,17 @@ class EvChargerEditor extends LitElement {
             .configValue=${"title"}
             @change=${this._onInputChanged}
           ></ha-textfield>
-
           <ha-textfield
             .label=${this._text("editor.imageUrl")}
             .value=${this._config.image_url || ""}
             .configValue=${"image_url"}
             @change=${this._onInputChanged}
           ></ha-textfield>
-
           <ha-select
             .label=${this._text("editor.language")}
             .value=${this._config.language || "auto"}
             @change=${this._onLanguageChanged}
-            @closed=${(event) => event.stopPropagation()}
+            @closed=${(e) => e.stopPropagation()}
             fixedMenuPosition
             naturalMenuWidth
           >
@@ -132,32 +111,44 @@ class EvChargerEditor extends LitElement {
 
   static get styles() {
     return css`
-    .editor {
-      display: grid;
-      gap: 16px;
-      padding: 10px 6px 0;
-    }
+      .editor {
+        display: grid;
+        gap: 16px;
+        padding: 12px 8px 4px;
+        font-family: var(--md-sys-typescale-body-medium-font, Roboto, sans-serif);
+      }
 
-    h3,
-    h4 {
-      margin: 0;
-      color: var(--primary-text-color);
-    }
+      h3 {
+        margin: 0 0 4px;
+        font-size: 0.95rem;
+        font-weight: 500;
+        letter-spacing: 0.01em;
+        color: var(--md-sys-color-on-surface, var(--primary-text-color));
+      }
 
-    section {
-      display: grid;
-      gap: 10px;
-      border: 1px solid var(--divider-color);
-      border-radius: 12px;
-      padding: 12px;
-      background: color-mix(in srgb, var(--card-background-color) 92%, #d9e8f7);
-    }
+      h4 {
+        margin: 0 0 2px;
+        font-size: 0.78rem;
+        font-weight: 500;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: var(--md-sys-color-primary, var(--primary-color));
+      }
 
-    ha-textfield,
-    ha-select,
-    ha-entity-picker {
-      width: 100%;
-    }
+      section {
+        display: grid;
+        gap: 10px;
+        border: 1px solid var(--md-sys-color-outline-variant, var(--divider-color));
+        border-radius: 12px;
+        padding: 14px 12px;
+        background: var(--md-sys-color-surface-container-low, var(--card-background-color));
+      }
+
+      ha-textfield,
+      ha-select,
+      ha-entity-picker {
+        width: 100%;
+      }
     `;
   }
 }
