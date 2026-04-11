@@ -92,18 +92,12 @@ class EvChargerEditor extends LitElement {
             .configValue=${"image_url"}
             @change=${this._onInputChanged}
           ></ha-textfield>
-          <ha-select
-            .label=${this._text("editor.language")}
-            .value=${this._config.language || "auto"}
-            @change=${this._onLanguageChanged}
-            @closed=${(e) => e.stopPropagation()}
-            fixedMenuPosition
-            naturalMenuWidth
-          >
-            <mwc-list-item value="auto">${this._text("editor.languageAuto")}</mwc-list-item>
-            <mwc-list-item value="en">${this._text("editor.languageEn")}</mwc-list-item>
-            <mwc-list-item value="de">${this._text("editor.languageDe")}</mwc-list-item>
-          </ha-select>
+          <label class="select-label">${this._text("editor.language")}</label>
+          <select class="lang-select" @change=${this._onLanguageChanged}>
+            <option value="auto" ?selected=${(this._config.language || "auto") === "auto"}>${this._text("editor.languageAuto")}</option>
+            <option value="en" ?selected=${this._config.language === "en"}>${this._text("editor.languageEn")}</option>
+            <option value="de" ?selected=${this._config.language === "de"}>${this._text("editor.languageDe")}</option>
+          </select>
         </section>
       </div>
     `;
@@ -148,6 +142,30 @@ class EvChargerEditor extends LitElement {
       ha-select,
       ha-entity-picker {
         width: 100%;
+      }
+
+      .select-label {
+        display: block;
+        font-size: 0.75rem;
+        color: var(--secondary-text-color);
+        margin-bottom: 4px;
+      }
+
+      .lang-select {
+        width: 100%;
+        padding: 10px 12px;
+        border-radius: 8px;
+        border: 1px solid var(--divider-color);
+        background: var(--card-background-color);
+        color: var(--primary-text-color);
+        font-size: 0.9375rem;
+        font-family: inherit;
+        cursor: pointer;
+        outline: none;
+      }
+
+      .lang-select:focus {
+        border-color: var(--primary-color);
       }
     `;
   }
